@@ -8,15 +8,14 @@ public class Book {
     private String title;
     private String author;
     private boolean available;
-    Person borrower;
+    private Person borrower;
 
 
     public Book(String title, String author) {
         this.id=generateRandomId();
         this.title = title;
         this.author = author;
-        this.borrower = null;
-        this.available=true;
+        this.setBorrower(null);
 
 
     }
@@ -25,24 +24,15 @@ public class Book {
 
     public Book(String title, String author, Person borrower) {
         this(title,author);
-        this.borrower = borrower;
-        this.available=false;
+        this.setBorrower(borrower);
+        borrower.bookList(this);
+
     }
 
-
-   /* private boolean isBorrowed(){
-        boolean isBorrowed= false;
-        if(borrower != null){
-            isBorrowed=true;
-        }
-        return  isBorrowed;
-    }*/
 
     public String getId() {
         return id;
     }
-
-
 
     public String getTitle() {
         return title;
@@ -71,14 +61,23 @@ public class Book {
 
     public void setBorrower(Person borrower) {
         this.borrower = borrower;
+        if(borrower!= null) {
+            this.available = false;
+        }else{
+            this.available=true;
+        }
 
     }
 
-    public void returnBook(){
-        this.available=true;
-        this.borrower=null;
-    }
 
+
+    private String displayBorrowerName(){
+        String name="None";
+        if(borrower!=null){
+          name = borrower.name();
+       }
+      return name;
+   }
 
 
 
@@ -87,6 +86,7 @@ public class Book {
         int randomId= random.nextInt(1000);
         return "BK-"+ randomId;
     }
+
 
 
     public String getBookInformation(){
@@ -100,7 +100,7 @@ public class Book {
         sb.append(" , Available: ");
         sb.append(available);
         sb.append(" , Borrower:");
-        sb.append(borrower.name() );
+        sb.append(displayBorrowerName() );
         return sb.toString();
     }
 
